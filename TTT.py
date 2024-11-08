@@ -126,6 +126,13 @@ class RandomAI:
 # this AI makes a list of possible moves, then preferred moves, then picks a random preferred
 # move. It has no block function because there were too many bugs.
 class Felix_Jessie_AI:
+   def determine_player(self, game):
+       p1 = True
+       o = game.board.count("O")
+       x = game.board.count("X")
+       if x>o:
+           p1 = False
+       return p1
    def determine_move(self, game):  
         rows = 3 #this will change depending on the amount of rows in a board
         possibleMoves = []
@@ -136,7 +143,7 @@ class Felix_Jessie_AI:
                 game.board[spot] = "O"
                 win = game.check_win(game.board) #check win returns true or false using any(), which checks for true items in a list
                 if win:
-                    print ("Good Game")
+                    print ("Good Game!")
                     win_spot = spot
                     game.board[spot] = ' '
                     return win_spot
@@ -198,8 +205,12 @@ class Felix_Jessie_AI:
                     moves.append(m)
             except IndexError:
                 pass
+            # this is to set up a potential trap
             if m == 0 or m == 2 or m ==6 or m == 8:
                     moves.append(m)
+            # we want this to only happen when the AI is p2 so that it can block possible traps
+            if m == 4 and not self.determine_player(game):
+                return m
         # if there are no good moves, it picks the first one
         if len(moves)==0:
             return possibleMoves[0]
@@ -217,9 +228,9 @@ if __name__ == "__main__":
 
     # For students' AI competition:
     #player1 = HumanPlayer('X')
-    player1 = HumanPlayer('X')
+    player2 = HumanPlayer('X')
     #player1 = AIPlayer('X', SimpleAI())  # Replace with student AI implementation - name function with your name ie: "Jim-AI"
     #player2 = AIPlayer('X', RandomAI())  # Replace with another student AI implementation or the same for testing ie: "Mary-AI"
-    player2 = AIPlayer('O', Felix_Jessie_AI())
+    player1 = AIPlayer('O', Felix_Jessie_AI())
     game = TicTacToe(player1, player2)
     game.play()
