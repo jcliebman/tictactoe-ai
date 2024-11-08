@@ -126,6 +126,13 @@ class RandomAI:
 # this AI makes a list of possible moves, then preferred moves, then picks a random preferred
 # move. It has no block function because there were too many bugs.
 class Felix_Jessie_AI:
+   def determine_player(self, game):
+       p1 = True
+       o = game.board.count("O")
+       x = game.board.count("X")
+       if x>o:
+           p1 = False
+       return p1
    def determine_move(self, game):  
         rows = 3 #this will change depending on the amount of rows in a board
         possibleMoves = []
@@ -202,7 +209,7 @@ class Felix_Jessie_AI:
             if m == 0 or m == 2 or m ==6 or m == 8:
                     moves.append(m)
             # we want this to only happen when the AI is p2 so that it can block possible traps
-            if m == 4:
+            if m == 4 and not self.determine_player(game):
                 return m
         # if there are no good moves, it picks the first one
         if len(moves)==0:
