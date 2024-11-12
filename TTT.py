@@ -255,7 +255,7 @@ class MinimaxAI:
         for move in range(9): #loop through all possible moves on the 3x3 board
             if game.is_valid_move(move):
                 game.make_move(move, 'O') #ai test plays O 
-                score = self.FJ_minimax(game, 0, False)  #call minimax with ai as maximizing
+                score = self.FJ_minimax(game, 0, False)  #call minimax using min for the next player.
                 game.board[move] = ' '  #undo move
                 #update the best score if one is found
                 if score > best_score:
@@ -275,9 +275,9 @@ if __name__ == "__main__":
 
     # For students' AI competition:
     #player1 = HumanPlayer('X')
-    player2 = HumanPlayer('X')
+    player1 = HumanPlayer('X')
     #player1 = AIPlayer('X', SimpleAI())  # Replace with student AI implementation - name function with your name ie: "Jim-AI"
     #player2 = AIPlayer('X', RandomAI())  # Replace with another student AI implementation or the same for testing ie: "Mary-AI"
-    player1 = AIPlayer('O', MinimaxAI())
+    player2 = AIPlayer('O', MinimaxAI())
     game = TicTacToe(player1, player2)
     game.play()
