@@ -216,6 +216,53 @@ class Felix_Jessie_AI:
             return possibleMoves[0]
         # picks a random good move
         return moves[random.randint(0, len(moves)-1)]
+   
+class MinimaxAI:
+    def FJ_minimax(self, game, depth, is_maximizing):
+        #BASE CASE(s) check for win or tie
+
+        if game.check_win(game.board):
+            if not is_maximizing:
+                return 1
+            else:
+                return -1
+        elif game.is_board_full():
+            return 0
+
+        if is_maximizing:
+            best_score = -float('inf') #best score starts low at negative infinity
+            for move in range(9): #each space in 3x3 grid
+                if game.is_valid_move(move):
+                    game.make_move(move, 'O') #test move O
+                    score = self.FJ_minimax(game, depth + 1, False) #recursion! (calls as minimizer)
+                    game.board[move] = ' ' #undo move
+                    best_score = max(score, best_score) #update score
+            return best_score
+        else: #is minimizer
+            best_score = float('inf') #set best at infinity (so we can only go down)
+            for move in range(9): #pretty much the same
+                if game.is_valid_move(move):
+                    game.make_move(move, 'X') #moves X bc this is minimizer
+                    score = self.FJ_minimax(game, depth + 1, True) #recurs as max
+                    game.board[move] = ' '
+                    best_score = min(score, best_score)
+            return best_score
+         
+    def determine_move(self, game):
+        best_move = None
+        best_score = -float('inf') #set best score to negative infinity
+
+        for move in range(9): #loop through all possible moves on the 3x3 board
+            if game.is_valid_move(move):
+                game.make_move(move, 'O') #ai test plays O 
+                score = self.FJ_minimax(game, 0, False)  #call minimax using min for the next player.
+                game.board[move] = ' '  #undo move
+                #update the best score if one is found
+                if score > best_score:
+                    best_score = score
+                    best_move = move
+
+        return best_move
             
             
 if __name__ == "__main__":
@@ -228,9 +275,9 @@ if __name__ == "__main__":
 
     # For students' AI competition:
     #player1 = HumanPlayer('X')
-    player2 = HumanPlayer('X')
+    player1 = HumanPlayer('X')
     #player1 = AIPlayer('X', SimpleAI())  # Replace with student AI implementation - name function with your name ie: "Jim-AI"
     #player2 = AIPlayer('X', RandomAI())  # Replace with another student AI implementation or the same for testing ie: "Mary-AI"
-    player1 = AIPlayer('O', Felix_Jessie_AI())
+    player2 = AIPlayer('O', MinimaxAI())
     game = TicTacToe(player1, player2)
     game.play()
